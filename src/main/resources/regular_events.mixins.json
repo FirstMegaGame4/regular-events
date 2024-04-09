@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "fr.firstmegagame4.regular.events.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "ServerWorldMixin",
+    "WorldMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}

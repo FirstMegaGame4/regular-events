@@ -19,9 +19,9 @@ public enum DefaultEventDifficulties implements EventDifficulty {
 		"Bonus"
 	), Formatting.AQUA),
 
-	GOOD_CHALLENGE(Text.translatableWithFallback(
-		"event_difficulty.regular_events.good_challenge",
-		"Bad Challenge"
+	EASY_CHALLENGE(Text.translatableWithFallback(
+		"event_difficulty.regular_events.easy_challenge",
+		"Easy Challenge"
 	), Formatting.GREEN),
 
 	BALANCED(Text.translatableWithFallback(
@@ -29,9 +29,9 @@ public enum DefaultEventDifficulties implements EventDifficulty {
 		"Balanced"
 	), Formatting.YELLOW),
 
-	BAD_CHALLENGE(Text.translatableWithFallback(
-		"event_difficulty.regular_events.bad_challenge",
-		"Good Challenge"
+	HARD_CHALLENGE(Text.translatableWithFallback(
+		"event_difficulty.regular_events.hard_challenge",
+		"Hard Challenge"
 	), Formatting.GOLD),
 
 	MALUS(Text.translatableWithFallback(

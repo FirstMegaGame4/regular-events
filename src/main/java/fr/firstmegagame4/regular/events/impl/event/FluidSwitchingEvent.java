@@ -19,7 +19,7 @@ public class FluidSwitchingEvent implements RegularEvent {
 
 	@Override
 	public EventDifficulty getEventDifficulty() {
-		return DefaultEventDifficulties.BAD_CHALLENGE;
+		return DefaultEventDifficulties.HARD_CHALLENGE;
 	}
 
 	@Override

@@ -3,16 +3,23 @@ package fr.firstmegagame4.regular.events.impl;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import fr.firstmegagame4.regular.events.api.DelayedEvent;
 import fr.firstmegagame4.regular.events.api.EventDifficulty;
 import fr.firstmegagame4.regular.events.api.EventUtil;
 import fr.firstmegagame4.regular.events.api.RegularEvent;
+import net.minecraft.command.EntitySelector;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class RegularEventsCommands {
 
@@ -25,6 +32,11 @@ public class RegularEventsCommands {
 		RegularEventsImpl.REFERENCES.stream()
 			.filter(reference -> reference.getIdentifier().getNamespace().equals(context.getArgument("namespace", String.class)))
 			.forEach(reference -> builder.suggest(reference.getIdentifier().getPath()));
+		return builder.buildFuture();
+	};
+
+	public static final SuggestionProvider<ServerCommandSource> FILTER_TYPES = (context, builder) -> {
+		Arrays.stream(PlayerFiltering.FilterType.values()).map(t -> t.toString().toLowerCase()).forEach(builder::suggest);
 		return builder.buildFuture();
 	};
 
@@ -41,6 +53,28 @@ public class RegularEventsCommands {
 							CommandManager.argument("path", StringArgumentType.word())
 								.suggests(RegularEventsCommands.PATHS)
 								.executes(RegularEventsCommands::triggerEvent)
+						)
+				)
+		);
+		dispatcher.register(
+			CommandManager.literal("blacklist-from-events")
+				.requires(source -> source.hasPermissionLevel(2))
+				.then(
+					CommandManager.literal("append")
+						.then(
+							CommandManager.argument("player", EntityArgumentType.players())
+								.then(
+									CommandManager.argument("type", StringArgumentType.word())
+										.suggests(RegularEventsCommands.FILTER_TYPES)
+										.executes(RegularEventsCommands::appendInBlackList)
+								)
+						)
+				)
+				.then(
+					CommandManager.literal("remove")
+						.then(
+							CommandManager.argument("player", EntityArgumentType.players())
+								.executes(RegularEventsCommands::removeFromBlackList)
 						)
 				)
 		);
@@ -91,5 +125,18 @@ public class RegularEventsCommands {
 			context.getSource().sendError(Text.of(identifier).copy().append(" is not an event!"));
 			return 0;
 		}
+	}
+
+	private static int appendInBlackList(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+		List<ServerPlayerEntity> selector = context.getArgument("player", EntitySelector.class).getPlayers(context.getSource());
+		PlayerFiltering.FilterType filterType = PlayerFiltering.FilterType.valueOf(context.getArgument("type", String.class).toUpperCase());
+		selector.forEach(player -> player.setAttached(PlayerFiltering.FILTER_ATTACHMENT, filterType));
+		return 1;
+	}
+
+	private static int removeFromBlackList(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+		List<ServerPlayerEntity> selector = context.getArgument("player", EntitySelector.class).getPlayers(context.getSource());
+		selector.forEach(player -> player.removeAttached(PlayerFiltering.FILTER_ATTACHMENT));
+		return 1;
 	}
 }

@@ -1,9 +1,9 @@
 {
   "event_difficulty.regular_events.great_bonus": "Great Bonus",
   "event_difficulty.regular_events.bonus": "Bonus",
-  "event_difficulty.regular_events.good_challenge": "Good Challenge",
+  "event_difficulty.regular_events.easy_challenge": "Easy Challenge",
   "event_difficulty.regular_events.balanced": "Balanced",
-  "event_difficulty.regular_events.bad_challenge": "Bad Challenge",
+  "event_difficulty.regular_events.hard_challenge": "Hard Challenge",
   "event_difficulty.regular_events.malus": "Malus",
   "event_difficulty.regular_events.horrible_malus": "Horrible Malus",
   "event_difficulty.regular_events.ominous": "Ominous"

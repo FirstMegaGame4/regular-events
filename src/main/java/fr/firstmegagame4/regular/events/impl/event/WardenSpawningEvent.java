@@ -34,8 +34,7 @@ public class WardenSpawningEvent implements RegularEvent {
 	public void execute(MinecraftServer server, List<ServerPlayerEntity> players) {
 		EventUtil.playerRandomAction(players, server, (world, player) -> {
 			WardenEntity wardenEntity = new WardenEntity(EntityType.WARDEN, world);
-			wardenEntity.setPosition(player.getPos().add(0.0, 50.0, 0.0));
-			wardenEntity.setTarget(player);
+			wardenEntity.setPosition(player.getPos().add(0.0, 25.0, 0.0));
 			world.spawnEntity(wardenEntity);
 			EventUtil.shout(server, Objects.requireNonNull(player.getDisplayName()).copy().append(" should worry about the Warden near to them..."));
 		});
